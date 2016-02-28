@@ -1,0 +1,33 @@
+{
+    "name": "xhprof",
+    "description": "A better UI for XHProf",
+    "keywords": ["XHProf"],
+    "homepage": "http://wen.wenzzz.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Davis Cai",
+            "email": "caiwxiong@qq.com"
+        }
+    ],
+    "support": {
+        "wiki": "http://wen.wenzzz.com",
+        "source": "http://wen.wenzzz.com"
+    },
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "config": {
+        "vendor-dir": "app/vendor"
+    },
+    "autoload": {
+        "psr-4": {
+        }
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "http://packagist.phpcomposer.com"
+        }
+    }
+}
