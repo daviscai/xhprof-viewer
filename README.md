@@ -11,3 +11,8 @@ PHP version >= 5.3
 2. 支持多国语言设置，xhprof报表字段翻译可以在配置文件里修改；
 3. 基于[Wen框架](https://github.com/daviscai/Wen)实现，简单易用。
 4. 与xhprof数据生成分离，仅仅作为分析报表的查看。
+
+
+### 预览
+
+![Xhprof](http://wenzzz.com/storage/xhprof.png)
