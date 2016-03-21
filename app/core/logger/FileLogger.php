@@ -2,26 +2,30 @@
 /**
  * Wen, an open source application development framework for PHP
  *
- * @link http://www.wenzzz.com/
- * @copyright Copyright (c) 2015 Wen
+ * @link http://wen.wenzzz.com/
+ * @copyright Copyright (c) 2016 Wen
  * @license http://opensource.org/licenses/MIT  MIT License
  */
-
 
 namespace app\core\logger;
 
 use Exception;
+use \app\core\base\Wen;
 use \app\core\logger\LoggerInterface;
 
 /**
- * 文件日志类
+ * 文件日志类, 实现了日志接口
  *
  * 定义了多种日志类型，可设置日志文件目录，在配置文件里定义：
+ * 
+ * ```php
  *   'logger' => array(
- *       'name' => 'FileLogger',       //文件日志类名
+ *       'class' => 'app\core\logger\FileLogger',       //文件日志类名
  *       'dir' => ROOT . '/tmp/logs',  //日志目录
  *       'fileNameFormat'=>'app.%name.%date.log'  //日志文件名称的格式
  *   )
+ * ```
+ * Wen::app()->logger->error('msg','test');
  */
 class FileLogger implements LoggerInterface 
 {
@@ -101,7 +105,8 @@ class FileLogger implements LoggerInterface
     
     /**
      * 设置日志文件名
-     * @param string $fileName
+     * @param string $level    日志等级
+     * @param string $fileName 日志文件名
      */
     public function setFileName($level, $fileName = '')
     {
@@ -113,6 +118,14 @@ class FileLogger implements LoggerInterface
         $this->_logName = str_replace('%date', date("Ymd"), $name);
     }
 
+    /**
+     * 写日志
+     * 
+     * @param string $level 日志等级标识
+     * @param string $msg 日志内容
+     * @param string $fileName 日志文件名
+     * @return boolean 是否写日志成功
+     */
     private function log($level, $msg, $fileName='')
     {
         
@@ -128,12 +141,12 @@ class FileLogger implements LoggerInterface
         $this->_logFullPath = $this->_logDir . DS . $this->_logName;
         $logKey = 'log_' . md5($this->_logFullPath);
         if (!is_writable($this->_logDir)) {
-            throw new Exception('failed to open stream: Permission denied : ' . $this->_logFullPath, 500);
+            throw new Exception( Wen::t('failed to open stream: Permission denied',['file'=>$this->_logFullPath]), 500);
         }
 
         $this->_logHandle[$logKey] = fopen($this->_logFullPath, 'a');
         if (!$this->_logHandle[$logKey]) {
-            throw new Exception('failed to open stream: Permission denied : ' . $this->_logFullPath, 500);
+            throw new Exception( Wen::t('failed to open stream: Permission denied',['file'=>$this->_logFullPath]), 500);
         }
                 
         $ip = $this->getIP();
@@ -145,7 +158,12 @@ class FileLogger implements LoggerInterface
         @chown($this->_logFullPath, 'nobody');
         return true;
     }
-        
+    
+    /**
+     * 获取客户端IP地址
+     * 
+     * @return string ip地址
+     */
     private function getIP() {
         if (isset($_SERVER)) {
             if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {

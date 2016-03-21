@@ -2,8 +2,8 @@
 /**
  * Wen, an open source application development framework for PHP
  *
- * @link http://www.wenzzz.com/
- * @copyright Copyright (c) 2015 Wen
+ * @link http://wen.wenzzz.com/
+ * @copyright Copyright (c) 2016 Wen
  * @license http://opensource.org/licenses/MIT  MIT License
  */
 
@@ -16,7 +16,7 @@ use \app\core\base\Di;
 /**
  * 核心应用静态类，应用层业务逻辑可以通过该类获得需要的对象实例，比如Application实例，日志实例等等
  *  
- * 这样的好处是，对外提供统一的访问方式，简单易用，提高开发效率。
+ * 这样的好处是，向业务层提供统一的访问方式，简单易用，提高开发效率。
  *
  * @author WenXiong Cai <caiwxiong@qq.com>
  * @since 1.0
@@ -38,7 +38,7 @@ class Wen
     }
 
     /**
-     * 设置应用实例
+     * 设置应用实例， 由 \wen\core\base\Application 完成初始化系列准备后调用此方法
      * 
      * @param  $app application
      */
@@ -60,6 +60,18 @@ class Wen
     /**
      * 多国语言国际化翻译静态方法
      * 
+     * 比如显示中文提示：
+     * ```php
+     * Wen::t('abc',['username'=>'davis']);
+     * 
+     * config/lang/zh-CN.config 配置文件：
+     * 
+     * return array(
+     *  'abc'=>'您好, {username}'
+     * );
+     * 
+     * ```
+     * 
      * @param  string $message 英文字符串，对应配置文件里数组中的key
      * @param  array $params 把该数组里的key=>value替换掉文本里的占位字符key
      * @return string 翻译后的文本信息
@@ -79,14 +91,17 @@ class Wen
     }
 
     /**
-     * Configures an object with the initial property values.
-     * @param object $object the object to be configured
-     * @param array $properties the property initial values given in terms of name-value pairs.
-     * @return object the object itself
+     * 初始化对象属性
+     * 
+     * @param object $object 对象
+     * @param array $properties 对象的属性值
+     * @return object 对象本身
+     *
+     * 此方法参考自Yii2.0
      */
     public static function configure($object, $properties)
     {
-        if(empty($properties) || !is_array($properties)){
+        if(empty($properties) || !is_array($properties)) {
             return $object;
         }
 
@@ -97,7 +112,16 @@ class Wen
         return $object;
     }
 
-
+    /**
+     * 创建对象实例，通过 app\core\base\Di 依赖注入返回对象实例
+     * 
+     * @param mix $type 可以是包含初始化对象的数组，比如 app\config\app.config里的cache，数组必须包含class字段，指定要创建的类
+     *                  也可以直接指定要创建的类，字符串形式
+     * @param array $params 创建对象时需要初始化的属性参数
+     * @return object 对象实例
+     * 
+     * 此方法参考自Yii2.0
+     */
     public static function createObject($type, array $params = [])
     {
         $DiContainer = new Di();

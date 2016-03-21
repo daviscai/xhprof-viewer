@@ -2,14 +2,15 @@
 /**
  * Wen, an open source application development framework for PHP
  *
- * @link http://www.wenzzz.com/
- * @copyright Copyright (c) 2015 Wen
+ * @link http://wen.wenzzz.com/
+ * @copyright Copyright (c) 2016 Wen
  * @license http://opensource.org/licenses/MIT	MIT License
  */
 
 namespace app\core\i18n;
 
 use Exception;
+use \app\core\base\Wen;
 
 /**
  * 多国语言国际化服务提供者，统一接口，通过set方法实例化具体的实现类，实现依赖注入
@@ -22,15 +23,19 @@ use Exception;
  */
 class I18NProvider
 {
-
+    /**
+     * @var object 多国语言具体实现类对象
+     */
 	private $i18n;
 
+    /**
+     * @var string 当前语言
+     */
     private $language;
 	
     public function __construct($config)
     {
         $this->set($config);
-
         $this->setLanguage($config);
     }   
 
@@ -54,14 +59,14 @@ class I18NProvider
      */
     private function set($config)
     {
-        if(empty($config) || empty($config['class'])  ) {
-            throw new Exception('找不到i18n类，请在配置文件里设置', 500);
+        if(empty($config) || empty($config['class'])) {
+            throw new Exception( Wen::t('cannot find i18n class'), 500);
         }
-
+        
         $cls = $config['class'];
         
         if(!class_exists($cls)) {
-            throw new Exception('实例化i18n失败，'.$cls.' 类不存在', 500);
+            throw new Exception( Wen::t('cannot create i18n instance',['class'=>$cls]), 500);
         }
 
         $dir = isset($config['dir']) ?  ROOT . '/' .$config['dir'] : ROOT . '/app/config/lang/';

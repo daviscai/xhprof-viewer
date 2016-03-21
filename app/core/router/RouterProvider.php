@@ -2,19 +2,18 @@
 /**
  * Wen, an open source application development framework for PHP
  *
- * @link http://www.wenzzz.com/
- * @copyright Copyright (c) 2015 Wen
+ * @link http://wen.wenzzz.com/
+ * @copyright Copyright (c) 2016 Wen
  * @license http://opensource.org/licenses/MIT	MIT License
  */
 
 namespace app\core\router;
 
 use Exception;
+use app\core\base\Wen;
 
 /**
  * 路由器服务提供者，统一接口，通过setRouter方法实例化具体的路由器，实现依赖注入
- * 
- * 这样做的好处：解耦，高层业务不依赖底层实现
  *
  *
  * @author WenXiong Cai <caiwxiong@qq.com>
@@ -46,13 +45,13 @@ class RouterProvider
     private function setRouter($router)
     {
         if(empty($router) || empty($router['class'])  ) {
-            throw new Exception('找不到路由器，请在配置文件里设置', 500);
+            throw new Exception( Wen::t('cannot find router class'), 500);
         }
 
         $routerClass = $router['class'];
         
         if(!class_exists($routerClass)) {
-            throw new Exception('实例化路由器失败，'.$routerClass.' 类不存在', 500);
+            throw new Exception( Wen::t('cannot create router instance',['class'=>$routerClass]), 500);
         }
 
         $configFile = isset($router['configFile']) ? ROOT . DS . $router['configFile'] : '';

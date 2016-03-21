@@ -2,14 +2,15 @@
 /**
  * Wen, an open source application development framework for PHP
  *
- * @link http://www.wenzzz.com/
- * @copyright Copyright (c) 2015 Wen
+ * @link http://wen.wenzzz.com/
+ * @copyright Copyright (c) 2016 Wen
  * @license http://opensource.org/licenses/MIT	MIT License
  */
 
 namespace app\core\logger;
 
 use Exception;
+use \app\core\base\Wen;
 
 /**
  * 日志器服务提供者，统一接口，通过setLogger方法实例化具体的日志器，实现依赖注入
@@ -33,13 +34,13 @@ class LoggerProvider
     private function setLogger($config)
     {
         if(empty($config) || empty($config['class'])  ) {
-            throw new Exception('找不到日志类，请在配置文件里设置', 500);
+            throw new Exception(Wen::t('cannot find logger class'), 500);
         }
 
         $loggerClass = $config['class'];
         
         if(!class_exists($loggerClass)) {
-            throw new Exception('实例化日志类失败，'.$loggerClass.' 类不存在', 500);
+            throw new Exception( Wen::t('cannot create logger instance',['logger'=>$loggerClass]), 500);
         }
 
         $logDir = isset($config['dir']) ? $config['dir'] : ROOT . '/tmp/logs/';

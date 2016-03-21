@@ -2,8 +2,8 @@
 /**
  * Wen, an open source application development framework for PHP
  *
- * @link http://www.wenzzz.com/
- * @copyright Copyright (c) 2015 Wen
+ * @link http://wen.wenzzz.com/
+ * @copyright Copyright (c) 2016 Wen
  * @license http://opensource.org/licenses/MIT  MIT License
  */
 
@@ -73,8 +73,7 @@ class StringHelper
 	   $search .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';  
 	   $search .= '1234567890!@#$%^&*()'; 
 	   $search .= '~`";:?+/={}[]-_|\'\\'; 
-	   for ($i = 0; $i < strlen($search); $i++) 
-	   { 
+	   for ($i = 0; $i < strlen($search); $i++) { 
 	      // ;? matches the ;, which is optional 
 	      // 0{0,7} matches any padded zeros, which are optional and go up to 8 chars 
 	     
@@ -91,16 +90,12 @@ class StringHelper
 	   $ra = array_merge($ra1, $ra2); 
 	     
 	   $found = true; // keep replacing as long as the previous round replaced something 
-	   while ($found == true) 
-	   { 
+	   while ($found == true) { 
 	      $val_before = $val; 
-	      for ($i = 0; $i < sizeof($ra); $i++) 
-	      { 
+	      for ($i = 0; $i < sizeof($ra); $i++) { 
 	         $pattern = '/'; 
-	         for ($j = 0; $j < strlen($ra[$i]); $j++) 
-	         { 
-	            if ($j > 0) 
-	            { 
+	         for ($j = 0; $j < strlen($ra[$i]); $j++) { 
+	            if ($j > 0) { 
 	               $pattern .= '(';  
 	               $pattern .= '(&#[xX]0{0,8}([9ab]);)'; 
 	               $pattern .= '|';  
@@ -112,8 +107,7 @@ class StringHelper
 	         $pattern .= '/i';  
 	         $replacement = substr($ra[$i], 0, 2).'<x>'.substr($ra[$i], 2); // add in <> to nerf the tag  
 	         $val = preg_replace($pattern, $replacement, $val); // filter out the hex tags  
-	         if ($val_before == $val) 
-	         {  
+	         if ($val_before == $val) {  
 	            // no replacements were made, so exit the loop  
 	            $found = false;  
 	         }  
@@ -122,25 +116,12 @@ class StringHelper
 	   return trim($val);  
 	}   
 
-
-	/**
-	 * 去除HTML、XML 以及 PHP 的标签。
-	 * @param  string $str 目标字符串
-	 * @return string 去除标签后的字符串
-	 */
-	public static function z( $str )
-	{
-		return strip_tags( $str );
-	}
-
-
 	/**
 	 * 判断字符串是否为json格式
 	 */
 	public static function isJson($str)
 	{
-	    if( is_array($str) )
-	    {
+	    if(is_array($str)) {
 	        return false;
 	    }
 	    $data = json_decode($str, true);
@@ -159,72 +140,53 @@ class StringHelper
 
 
 	/**
-	 * Validate an email address.
-	 * Provide email address (raw input)
-	 * Returns true if the email address has the email address format and the domain exists.
+	 * 判断有效的邮箱地址
 	 *
 	 */
-	public static function validEmail($email)
+	public static function isEmail($email)
 	{
-	   $isValid = true;
-	   $atIndex = strrpos($email, "@");
-	   if (is_bool($atIndex) && !$atIndex)
-	   {
-	      $isValid = false;
-	   }
-	   else
-	   {
-	      $domain = substr($email, $atIndex+1);
-	      $local = substr($email, 0, $atIndex);
-	      $localLen = strlen($local);
-	      $domainLen = strlen($domain);
-	      if ($localLen < 1 || $localLen > 64)
-	      {
-	         // local part length exceeded
-	         $isValid = false;
-	      }
-	      else if ($domainLen < 1 || $domainLen > 255)
-	      {
-	         // domain part length exceeded
-	         $isValid = false;
-	      }
-	      else if ($local[0] == '.' || $local[$localLen-1] == '.')
-	      {
-	         // local part starts or ends with '.'
-	         $isValid = false;
-	      }
-	      else if (preg_match('/\\.\\./', $local))
-	      {
-	         // local part has two consecutive dots
-	         $isValid = false;
-	      }
-	      else if (!preg_match('/^[A-Za-z0-9\\-\\.]+$/', $domain))
-	      {
-	         // character not valid in domain part
-	         $isValid = false;
-	      }
-	      else if (preg_match('/\\.\\./', $domain))
-	      {
-	         // domain part has two consecutive dots
-	         $isValid = false;
-	      }
-	      else if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\","",$local)))
-	      {
-	         // character not valid in local part unless 
-	         // local part is quoted
-	         if (!preg_match('/^"(\\\\"|[^"])+"$/',
-	             str_replace("\\\\","",$local)))
-	         {
-	            $isValid = false;
-	         }
-	      }
-	      if ( !checkdnsrr($domain) )
-	      {
-	         // domain not found in DNS
-	         $isValid = false;
-	      }
-	   }
-	   return $isValid;
+		$isValid = true;
+	   	$atIndex = strrpos($email, "@");
+	   	if (is_bool($atIndex) && !$atIndex) {
+	   		$isValid = false;
+	   	}else {
+	    	$domain = substr($email, $atIndex+1);
+	    	$local = substr($email, 0, $atIndex);
+	    	$localLen = strlen($local);
+	    	$domainLen = strlen($domain);
+	    	if ($localLen < 1 || $localLen > 64) {
+	    	   	// local part length exceeded
+	    	   	$isValid = false;
+	    	} else if ($domainLen < 1 || $domainLen > 255) {
+	    	   	// domain part length exceeded
+	    	   	$isValid = false;
+	    	} else if ($local[0] == '.' || $local[$localLen-1] == '.') {
+	    	   	// local part starts or ends with '.'
+	    		$isValid = false;
+	    	} else if (preg_match('/\\.\\./', $local)) {
+	    	   	// local part has two consecutive dots
+	    	   	$isValid = false;
+	    	} else if (!preg_match('/^[A-Za-z0-9\\-\\.]+$/', $domain)) {
+	    	   	// character not valid in domain part
+	    	   	$isValid = false;
+	    	} else if (preg_match('/\\.\\./', $domain)) {
+	    	   	// domain part has two consecutive dots
+	    	   	$isValid = false;
+	    	} else if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\","",$local))) {
+	    	   	// character not valid in local part unless 
+	    	   	// local part is quoted
+	    	   	if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\","",$local))) {
+	    	    	$isValid = false;
+	    	   	}
+	    	}
+
+	    	if (!checkdnsrr($domain)) {
+	    		// domain not found in DNS
+	    	   	$isValid = false;
+	    	}
+	   	}
+		
+		return $isValid;
 	}
 
 	/**
@@ -237,8 +199,7 @@ class StringHelper
 	    $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'; // 默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1 
 	    $maxPos = strlen($chars); 
 	    $pwd = ''; 
-	    for( $i = 0; $i < $len; $i++)
-	    {
+	    for( $i = 0; $i < $len; $i++) {
 	        $index = floor( rand(0,9)/10 * $maxPos  );
 	        $pwd .= substr( $chars, $index ,1 ); 
 	    }  
@@ -258,43 +219,40 @@ class StringHelper
 
 	/**
 	 * 获取UTF-8编码下的字符串长度，UTF-8编码下，中文、中文标点符号长度算为1，英文、英文标点符号、数字长度算为0.5
-	 * @param $source_str 原始字符处
+	 *
+	 * @param $sourceStr 原始字符处
 	 * @return string 返回字符串长度
 	 */
-	public static function getStrLen($source_str)
+	public static function getStrLen($sourceStr)
 	{
-	  if(!$source_str){
-	    return 0;
-	  }
-	  $i=0;
-	  $n=0;
-	  $str_length = strlen($source_str);//字符串的字节数
-	  while ($i<$str_length)
-	  {
-	    $temp_str=substr($source_str,$i,1);
-	    $ascnum=Ord($temp_str); //得到字符串中第$i位字符的ascii码
-	    if ($ascnum>=224)       //如果ASCII位高与224，
-	    {
-	      $i=$i+3;            //实际Byte计为3
-	      $n++;               //字串长度计1
-	    }
-	    elseif ($ascnum>=192)   //如果ASCII位高与192，
-	    {
-	      $i=$i+2;            //实际Byte计为2
-	      $n++;               //字串长度计1
-	    }
-	    elseif ($ascnum>=65 && $ascnum<=90) //如果是大写字母，
-	    {
-	      $i=$i+1;            //实际的Byte数仍计1个
-	      $n += 0.5;          //经测试，大写字母串MMDDCCFFGGTTLL跟小写字母串mmddccffggttll的长度一样长
-	    }
-	    else                    //其他情况下，包括小写字母和半角标点符号，
-	    {
-	      $i=$i+1;            //实际的Byte数计1个
-	      $n=$n+0.5;          //小写字母和半角标点等与半个高位字符宽...
-	    }
-	  }
-	  return $n;
+		if(!$sourceStr) {
+		  return 0;
+		}
+		$i=0;
+		$n=0;
+		$str_length = strlen($sourceStr);//字符串的字节数
+		while ($i<$str_length) {
+			$temp_str=substr($sourceStr,$i,1);
+			$ascnum=Ord($temp_str); //得到字符串中第$i位字符的ascii码
+			//如果ASCII位高与224
+			if ($ascnum>=224) {
+				$i=$i+3;            //实际Byte计为3
+				$n++;               //字串长度计1
+			} elseif ($ascnum>=192) {
+				//如果ASCII位高与192，
+			  	$i=$i+2;            //实际Byte计为2
+			  	$n++;               //字串长度计1
+			} elseif ($ascnum>=65 && $ascnum<=90) {
+				//如果是大写字母，
+			  	$i=$i+1;            //实际的Byte数仍计1个
+			  	$n += 0.5;          //经测试，大写字母串MMDDCCFFGGTTLL跟小写字母串mmddccffggttll的长度一样长
+			} else {
+				//其他情况下，包括小写字母和半角标点符号，
+			  	$i=$i+1;            //实际的Byte数计1个
+			  	$n=$n+0.5;          //小写字母和半角标点等与半个高位字符宽...
+			}
+		}
+		return $n;
 	}
 
 	/**
@@ -372,10 +330,10 @@ class StringHelper
 	}
 
 	/**
-     * Returns the number of bytes in the given string.
-     * This method ensures the string is treated as a byte array by using `mb_strlen()`.
-     * @param string $string the string being measured for length
-     * @return integer the number of bytes in the given string.
+     * 返回字符串的字节长度
+     *
+     * @param string $string 字符串
+     * @return integer 字节长度
      */
     public static function byteLength($string)
     {
@@ -383,13 +341,12 @@ class StringHelper
     }
 
     /**
-     * Returns the portion of string specified by the start and length parameters.
-     * This method ensures the string is treated as a byte array by using `mb_substr()`.
-     * @param string $string the input string. Must be one character or longer.
-     * @param integer $start the starting position
-     * @param integer $length the desired portion length. If not specified or `null`, there will be
-     * no limit on length i.e. the output will be until the end of the string.
-     * @return string the extracted part of string, or FALSE on failure or an empty string.
+     * 根据字符串的字节长度截取子字符串
+     * 
+     * @param string $string 要截取的字符串
+     * @param integer $start 开始位置
+     * @param integer $length 长度，如果没有指定，则截取到字符串末尾
+     * @return string 截取后字符串, 空字符串则返回false
      * @see http://www.php.net/manual/en/function.substr.php
      */
     public static function byteSubstr($string, $start, $length = null)
@@ -398,38 +355,12 @@ class StringHelper
     }
 
     /**
-     * Returns the trailing name component of a path.
-     * This method is similar to the php function `basename()` except that it will
-     * treat both \ and / as directory separators, independent of the operating system.
-     * This method was mainly created to work on php namespaces. When working with real
-     * file paths, php's `basename()` should work fine for you.
-     * Note: this method is not aware of the actual filesystem, or path components such as "..".
+     * 返回路径的上一级目录，跟dirname()内置方法一样
+     * 
+     * 会把“/”替换为"\"
      *
-     * @param string $path A path string.
-     * @param string $suffix If the name component ends in suffix this will also be cut off.
-     * @return string the trailing name component of the given path.
-     * @see http://www.php.net/manual/en/function.basename.php
-     */
-    public static function basename($path, $suffix = '')
-    {
-        if (($len = mb_strlen($suffix)) > 0 && mb_substr($path, -$len) === $suffix) {
-            $path = mb_substr($path, 0, -$len);
-        }
-        $path = rtrim(str_replace('\\', '/', $path), '/\\');
-        if (($pos = mb_strrpos($path, '/')) !== false) {
-            return mb_substr($path, $pos + 1);
-        }
-
-        return $path;
-    }
-
-    /**
-     * Returns parent directory's path.
-     * This method is similar to `dirname()` except that it will treat
-     * both \ and / as directory separators, independent of the operating system.
-     *
-     * @param string $path A path string.
-     * @return string the parent directory's path.
+     * @param string $path 路径字符串
+     * @return string 路径的上一级目录
      * @see http://www.php.net/manual/en/function.basename.php
      */
     public static function dirname($path)

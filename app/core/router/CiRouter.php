@@ -2,14 +2,15 @@
 /**
  * Wen, an open source application development framework for PHP
  *
- * @link http://www.wenzzz.com/
- * @copyright Copyright (c) 2015 Wen
+ * @link http://wen.wenzzz.com/
+ * @copyright Copyright (c) 2016 Wen
  * @license http://opensource.org/licenses/MIT	MIT License
  */
 
 namespace app\core\router;
 
 use Exception;
+use \app\core\base\Wen;
 use \app\core\router\RouterInterface;
 
 /**
@@ -143,7 +144,7 @@ class CiRouter implements RouterInterface
 
 			$this->translate_uri_dashes = isset($this->routes['translate_uri_dashes']) ? $this->routes['translate_uri_dashes'] : false;
 		}else{
-			throw new Exception('路由配置文件不存在：' . $config . '不存在！', 500);
+			throw new Exception( Wen::t('router config file not exists',['config'=>$config]), 500);
 		}
 	}
 
@@ -185,8 +186,6 @@ class CiRouter implements RouterInterface
 			return '';
 		}
 		
-		// parse_url() returns false if no host is present, but the path or query string
-		// contains a colon followed by a number
 		$uri = parse_url('http://dummy'.$_SERVER['REQUEST_URI']);
 		$query = isset($uri['query']) ? $uri['query'] : '';
 		$uri = isset($uri['path']) ? $uri['path'] : '';
@@ -206,8 +205,6 @@ class CiRouter implements RouterInterface
 			}
 		}
 
-		// This section ensures that even on servers that require the URI to be in the query string (Nginx) a correct
-		// URI is found, and also fixes the QUERY_STRING server var and $_GET array.
 		if (trim($uri, '/') === '' && strncmp($query, '/', 1) === 0)
 		{
 			$query = explode('?', $query, 2);
